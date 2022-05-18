@@ -74,6 +74,8 @@
             gltfLoader.load('./assets/EscenaJardin/Escena_Jardin_Final.gltf',
                 (gltf) => {
                     scene.add(gltf.scene)
+                    const Logo = gltf.scene.children.find((child) => child.name === "Logo");
+                    console.log(Logo)
                 },
                 () => { },
                 () => { }
@@ -98,6 +100,36 @@
             animate();
         }
 
+        //Mouse coors
+        const mouse = new THREE.Vector2();
+
+        //Raycaster
+        const raycaster = new THREE.Raycaster();
+
+        //Resize
+        const onResize = () => {
+            renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
+            camera.aspect = currentMount.clientWidth / currentMount.clientHeight;
+            camera.updateProjectionMatrix();
+        }
+
+        const onClick = () => {
+            raycaster.setFromCamera(mouse, camera);
+            let intersects = raycaster.intersectObjects(scene.children);
+            if (intersects.length > 0) {
+                console.log(intersects[0].object.userData.name)
+                if (intersects[0].object.userData.name === 'Letrero.003') {
+                    window.location.href = "https://www.google.com/";
+                }
+                return;
+            }
+        }
+
+        const onMouseMove = (event) => {
+            mouse.x = (event.clientX / currentMount.clientWidth) * 2 - 1;
+            mouse.y = -(event.clientY / currentMount.clientHeight) * 2 + 1;
+        }
+
         //Resize
         const resize = () => {
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -107,6 +139,7 @@
 
         //Render the scene
         const animate = () => {
+            raycaster.setFromCamera(mouse, camera);
             controls.update();
             renderer.render(scene, camera);
             requestAnimationFrame(animate);
@@ -118,6 +151,16 @@
         }
 
         window.addEventListener("resize", resize, false);
+
+        //Mount Scene
+        const mountScene = (mountRef) => {
+        currentMount = mountRef.current;
+        onResize();
+        currentMount.appendChild(renderer.domElement);
+        window.addEventListener('resize', onResize);
+        window.addEventListener('click', onClick);
+        window.addEventListener('mousemove', onMouseMove, false);
+}   
 
         init();
 
