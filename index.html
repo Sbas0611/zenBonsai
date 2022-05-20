@@ -51,6 +51,7 @@
             //Renderer
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
+            console.log(renderer.domElement);
             document.body.appendChild(renderer.domElement);
 
 
@@ -67,12 +68,13 @@
                 // optional: remove loader from DOM via event listener
                 loadingScreen.addEventListener('transitionend', onTransitionEnd);
                 document.getElementById('loader').remove();
+                document.getElementsByTagName('canvas')[0].style.display="block";
 
             });
 
             gltfLoader = new GLTFLoader(loadingManager);
             gltfLoader.load('./assets/EscenaJardin/Escena_Jardin_Final.gltf',
-                (gltf) => {
+                (gltf) => {      
                     scene.add(gltf.scene)
                     const Logo = gltf.scene.children.find((child) => child.name === "Logo");
                     console.log(Logo)

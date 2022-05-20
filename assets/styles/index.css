@@ -13,7 +13,7 @@ html,
         }
 
         #loading-screen {
-            < !-- w w w .d e m o 2s . c o m -->position: absolute;
+            position: absolute;
             z-index: 2;
             top: 0;
             left: 0;
